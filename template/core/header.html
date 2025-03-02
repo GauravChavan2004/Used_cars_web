@@ -71,17 +71,27 @@
                 class="dropdown-menu dropdown-menu-light dropdown-menu-end"
                 style="z-index: 1050">
                 <li>
-                  <a class="dropdown-item" href="{% url 'user:user_login' %}"
-                    >Your Account</a
-                  >
+                  <a class="dropdown-item" href="#">Your Account</a>
                 </li>
                 <li><hr class="dropdown-divider" /></li>
                 <li>
+                  {% if user.is_authenticated %}
                   <a
                     class="dropdown-item text-danger"
                     href="{% url 'user:user_logout' %}"
-                    >Logout</a
+                    ><i
+                      class="bi bi-box-arrow-right"
+                      style="font-size: 20px"></i>
+                    Logout</a
                   >
+                  {% else %}
+                  <a class="dropdown-item" href="{% url 'user:user_login' %}"
+                    ><i
+                      class="bi bi-box-arrow-in-right"
+                      style="font-size: 20px"></i>
+                    Login</a
+                  >
+                  {% endif %}
                 </li>
               </ul>
             </li>

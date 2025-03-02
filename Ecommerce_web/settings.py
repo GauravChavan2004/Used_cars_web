@@ -142,3 +142,19 @@ JAZZMIN_SETTINGS={
     'site_logo': "media\logo\Car Logo 1 (1).png",
     'copyright':"one-point-car-mall.com",
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'gc6781655@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'qgfhtvqryihrbrzk'  # Replace with your email password
+
+import firebase_admin
+from firebase_admin import credentials, auth
+
+# Load Firebase credentials
+FIREBASE_CREDENTIALS_PATH = "firebase_credentials.json"
+cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
+firebase_admin.initialize_app(cred)

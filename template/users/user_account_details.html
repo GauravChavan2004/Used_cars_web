@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Firebase OTP Login</title>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/10.6.0/firebase-app-compat.js"></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/10.6.0/firebase-auth-compat.js"></script>
+  </head>
+  <body>
+    <input type="text" id="phone" placeholder="Enter phone number" />
+    <div id="recaptcha-container"></div>
+    <button onclick="sendOTP()">Send OTP</button>
+
+    <input type="text" id="otp" placeholder="Enter OTP" />
+    <button onclick="verifyOTP()">Verify OTP</button>
+
+    <script>
+      console.log('Checking Firebase:', typeof firebase);
+      window.onload = function () {
+        console.log('Firebase is loading...');
+        const firebaseConfig = {
+          apiKey: 'AIzaSyCyXQAy9bqPLlX_LLbr18C4FWQtv8cnAMY',
+          authDomain: 'secondhandcars-de391.firebaseapp.com',
+          projectId: 'secondhandcars-de391',
+          storageBucket: 'secondhandcars-de391.firebasestorage.app',
+          messagingSenderId: '723533164631',
+          appId: '1:723533164631:web:cb5db84e6d554e3f7e7312',
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        console.log('✅ Firebase initialized successfully!');
+
+        // ✅ Initialize reCAPTCHA inside onload AFTER Firebase is initialized
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+          'recaptcha-container',
+          {
+            size: 'normal',
+            callback: function (response) {
+              console.log('✅ reCAPTCHA verified!');
+            },
+          }
+        );
+
+        console.log('✅ reCAPTCHA initialized successfully!');
+      };
+
+      function sendOTP() {
+        let phoneNumber = document.getElementById('phone').value;
+
+        firebase
+          .auth()
+          .signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
+          .then((confirmationResult) => {
+            window.confirmationResult = confirmationResult;
+            alert('OTP sent successfully!');
+          })
+          .catch((error) => {
+            alert('Error sending OTP: ' + error.message);
+          });
+      }
+
+      function verifyOTP() {
+        let otp = document.getElementById('otp').value;
+
+        window.confirmationResult
+          .confirm(otp)
+          .then((result) => {
+            let user = result.user;
+            alert('OTP Verified! User ID: ' + user.uid);
+          })
+          .catch((error) => {
+            alert('Invalid OTP: ' + error.message);
+          });
+      }
+    </script>
+  </body>
+</html>

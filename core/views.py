@@ -13,7 +13,7 @@ def home_page(request):
     for car in data:
         lakh_price = car.price / 100000  # Convert the price to lakh
         formatted_price = "{:.2f} lakh".format(lakh_price)  # Format the price
-        print(formatted_price)
+        
         formatted_data.append({
             'car': car,
             'formatted_price': formatted_price
