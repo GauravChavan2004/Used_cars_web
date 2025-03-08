@@ -1,7 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <title>shopcart</title>
+  <title>One Point Car Mall</title>
   <head>
     <link rel="stylesheet" href="" />
     <link
@@ -71,7 +71,9 @@
                 class="dropdown-menu dropdown-menu-light dropdown-menu-end"
                 style="z-index: 1050">
                 <li>
-                  <a class="dropdown-item" href="#">Your Account</a>
+                  <a class="dropdown-item" href="{% url 'user:user_account' %}"
+                    >Your Account</a
+                  >
                 </li>
                 <li><hr class="dropdown-divider" /></li>
                 <li>

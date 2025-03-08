@@ -54,6 +54,7 @@
     gap: 20px;
     font-size: 14px;
   }
+
   @media (max-width: 768px) {
     .sidebar {
       position: relative;
@@ -92,46 +93,20 @@
         <div class="mb-3">
           <h6>Make & Model</h6>
           <div class="make_model">
+            {% for make_value, make_label in makes %}
             <div class="form-check">
               <input
-                class="form-check-input"
-                type="checkbox"
-                value="Maruti"
-                id="brandMaruti" />
-              <label class="form-check-label" for="brandMaruti">Maruti</label>
+                  class="form-check-input"
+                  type="checkbox"
+                  name="make"
+                  value="{{ make_value }}"
+                  id="brand{{ make_value }}"
+                  {% if make_value in selected_makes %}checked{% endif %} />
+
+                {{ make_label }}
+              </label>
             </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value="Hyundai"
-                id="brandHyundai" />
-              <label class="form-check-label" for="brandHyundai">Hyundai</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value="Honda"
-                id="brandHonda" />
-              <label class="form-check-label" for="brandHonda">Honda</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value="Tata"
-                id="brandTata" />
-              <label class="form-check-label" for="brandTata">Tata</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value="Kia"
-                id="brandkia" />
-              <label class="form-check-label" for="brandKia">Kia</label>
-            </div>
+            {% endfor %}
           </div>
         </div>
 
@@ -204,7 +179,7 @@
               name="yearType"
               value="2016"
               id="year_16" />
-            <label class="form-check-label" for="year_18">2016 & above</label>
+            <label class="form-check-label" for="year_16">2016 & above</label>
           </div>
           <div class="form-check">
             <input
@@ -261,9 +236,11 @@
                 0 6px 20px 0 rgba(0, 0, 0, 0.19);
             ">
             <img
-              src="{% if item.car.car_img %}{{ item.car.car_img.url }}{% else %}{% static 'default_img\default_img.png' %}{% endif %}"
+              src="{% if item.car.car_img %}{{ item.car.car_img.url }}{% else %}{% static 'default_img/default_img.png' %}{% endif %}"
               class="card-img-top"
-              alt="..." />
+              height=180
+              alt="Car Image" />
+
             <div
               class="card-body"
               style="border-top: 2px solid gray; border-radius: 10px">
@@ -310,3 +287,32 @@
   rangeInput.addEventListener('input', updatePriceRange);
   updatePriceRange(); // Set initial values
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    function fetchFilteredCars() {
+      var formData = $("form").serialize(); // Collect all filter data
+
+      $.ajax({
+        url: "{% url 'core_url:filtered_cars' %}",  // Change this to match your Django view URL
+        type: "GET",
+        data: formData,
+        success: function (response) {
+          $(".row.row-cols-1").html(response.html); // Update the car listing
+        }
+      });
+    }
+
+    // Detect changes on filters
+    $(".form-check-input, #price-range").on("change input", function () {
+      fetchFilteredCars();
+    });
+
+    // Submit button should also trigger AJAX
+    $("form").on("submit", function (e) {
+      e.preventDefault(); // Prevent form from submitting traditionally
+      fetchFilteredCars();
+    });
+  });
+</script>
+

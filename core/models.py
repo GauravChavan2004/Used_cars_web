@@ -10,11 +10,19 @@ class Car(models.Model):
         ('Honda', 'Honda'),
         ('Ford', 'Ford'),
         ('Kia', 'Kia'),
+        ('Renault', 'Renault'),
+        ('Skoda', 'Skoda'),
+        ('Mahindra', 'Mahindra'),
+        ('Nissan', 'Nissan'),
+        ('Volkswagen', 'Volkswagen'),
+        ('MG', 'MG'),
+        ('Jeep', 'Jeep'),
+
         # Add more makes as needed
     ]
     reg_month_CHOICES = [
         ('Jan', 'january'),
-        ('Feb', 'Febuary'),
+        ('Feb', 'February'),
         ('March', 'March'),
         ('April', 'April'),
         ('May', 'may'),
@@ -31,7 +39,7 @@ class Car(models.Model):
     
     make = models.CharField(max_length=20, choices=MAKE_CHOICES)
     model = models.CharField(max_length=100)
-    registration_month = models.CharField(max_length=20, choices=reg_month_CHOICES, default="january")
+    registration_month = models.CharField(max_length=20, choices=reg_month_CHOICES, default="jan")
     registration_year = models.IntegerField()
     manufacture_year = models.IntegerField()
     owner = models.IntegerField()
@@ -43,7 +51,7 @@ class Car(models.Model):
     RTO = models.CharField(max_length=20)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     car_location = models.CharField(max_length=100)
-    car_img=models.ImageField(upload_to='title_car/',default='media\default_img\default_img.png', help_text="Upload an image of the car for the display view.")
+    car_img=models.ImageField(upload_to='title_car/',default='media/default_img/default_img.png', help_text="Upload an image of the car for the display view.")
     status = models.CharField(max_length=20, choices=[('AVAILABLE', 'Available'), ('BOOK', 'Book'),('SOLD', 'Sold')], default="AVAILABLE")
 
     def __str__(self):
@@ -56,3 +64,23 @@ class CarImage(models.Model):
 
     def __str__(self):
         return f"Image of {self.car.make} {self.car.model} ({self.id})"
+    
+class TestDriveBooking(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('CONFIRMED', 'Confirmed'),
+        ('COMPLETED', 'Completed'),
+        ('CANCELED', 'Canceled')
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # User who booked
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)  # Car being booked
+    date = models.DateField()  # Selected test drive date
+    time = models.CharField(max_length=20)  # Selected time slot
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="PENDING")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        # Fetch the mobile number from UserProfile, handle cases where it doesn't exist
+        mobile_number = getattr(self.user.userprofile, 'mobile_number', 'N/A')
+        return f"{self.user.username} ({mobile_number}) - {self.car.make} {self.car.model} - {self.date} at {self.time}"

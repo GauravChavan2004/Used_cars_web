@@ -1,0 +1,37 @@
+<!-- core/templates/core/car_list_partial.html -->
+{% load static %} {% for item in formatted_data %}
+<div class="col">
+  <div
+    class="card h-100 p-2"
+    style="
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    ">
+    <img
+      src="{{ item.car.car_img.url }}"
+      class="card-img-top"
+      height="180"
+      alt="Car Image" />
+    <div
+      class="card-body"
+      style="border-top: 2px solid gray; border-radius: 10px">
+      <h6 class="card-title text-truncate">
+        <a
+          href="{% url 'core_url:car_view' item.car.id %}"
+          class="stretched-link">
+          {{ item.car.registration_year }} {{ item.car.make }}
+          {{item.car.model}}
+        </a>
+      </h6>
+      <div class="card-text">
+        <ul>
+          <li style="list-style: none">{{ item.car.km_driven }} km</li>
+          <li>{{ item.car.fuel_type }}</li>
+          <li>{{ item.car.transmission_type }}</li>
+        </ul>
+        <h5><i class="bi bi-currency-rupee"></i> {{ item.formatted_price }}</h5>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}

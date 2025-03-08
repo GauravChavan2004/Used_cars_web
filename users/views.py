@@ -3,9 +3,6 @@ from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib import messages
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.template.loader import render_to_string
@@ -13,8 +10,78 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import PasswordResetRequestForm, SetNewPasswordForm
+from .models import UserProfile
+from core.models import TestDriveBooking, Car
+from datetime import datetime, timedelta
 
-# 🔹 Step 3.1: Request Password Reset
+
+
+
+#@login_required
+def user_register(request):
+    if request.method=='POST':
+        first_name=request.POST['first_name']
+        last_name=request.POST['last_name']
+        email=request.POST['email']
+        username=request.POST['username']
+        password1=request.POST['password1']
+        password2=request.POST['password2']     
+        mobile_number = request.POST['mobile_number']
+
+        # Check if passwords match
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match')
+            return redirect('users/user_register')
+        
+        # Check if username or email already exists
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already taken')
+            return redirect('users_url:user_register')
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, 'Email is already registered')
+            return redirect('users_url:user_register')
+        
+        if UserProfile.objects.filter(mobile_number=mobile_number).exists():
+            messages.error(request, 'Mobile number is already registered')
+            return redirect('users_url:user_register')
+
+        user = User.objects.create_user(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            username=username,
+            password=password1
+        )
+        user.save()
+        UserProfile.objects.create(user=user, mobile_number=mobile_number)
+        messages.success(request, 'Account created successfully. You can now log in.')
+        return redirect('users_url:user_login')
+    return render(request, 'users/register.html')
+
+def user_login(request):
+    if request.method=='POST':
+        username=request.POST['username']
+        password=request.POST['password']
+        user= auth.authenticate(username=username,password=password)
+
+        if user is not None:
+            auth.login(request,user)
+            return redirect('/')
+        else:
+            messages.error(request, 'Invalid username and password !!')
+            return redirect('users_url:user_login')
+        
+    return render(request, 'users/login.html')
+
+def user_logout(request):
+    logout(request)
+    messages.success(request, "You have successfully logged out.")
+    return redirect('users_url:user_login')
+
+def user_otp(request):
+    return render(request, 'users/user_account_details.html')
+
+#forgot Password
 def password_reset_request(request):
     if request.method == "POST":
         form = PasswordResetRequestForm(request.POST)
@@ -81,61 +148,6 @@ def password_reset_complete(request):
     return render(request, "users/forget_password/password_reset_complete.html")
 
 
-
-
-
-#@login_required
-def user_register(request):
-    if request.method=='POST':
-        first_name=request.POST['first_name']
-        last_name=request.POST['last_name']
-        email=request.POST['email']
-        username=request.POST['username']
-        password1=request.POST['password1']
-        password2=request.POST['password2']     
-
-        # Check if passwords match
-        if password1 != password2:
-            messages.error(request, 'Passwords do not match')
-            return redirect('users/user_register')
-        
-        # Check if username or email already exists
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'Username already taken')
-            return redirect('users_url:user_register')
-        elif User.objects.filter(email=email).exists():
-            messages.error(request, 'Email is already registered')
-            return redirect('users_url:user_register')
-
-        data=User.objects.create_user(first_name=first_name,last_name=last_name,email=email,username=username,password=password1)
-        data.save()
-        messages.success(request, 'Account created successfully. You can now log in.')
-        return redirect('users_url:user_login')
-    return render(request, 'users/register.html')
-
-def user_login(request):
-    if request.method=='POST':
-        username=request.POST['username']
-        password=request.POST['password']
-        user= auth.authenticate(username=username,password=password)
-
-        if user is not None:
-            auth.login(request,user)
-            return redirect('/')
-        else:
-            messages.error(request, 'Invalid username and password !!')
-            return redirect('users_url:user_login')
-        
-    return render(request, 'users/login.html')
-
-def user_logout(request):
-    logout(request)
-    messages.success(request, "You have successfully logged out.")
-    return redirect('users_url:user_login')
-
-def user_otp(request):
-    return render(request, 'users/user_account_details.html')
-
 # import json
 # from django.http import JsonResponse
 # from firebase_admin import auth
@@ -167,4 +179,61 @@ def user_otp(request):
 #     except Exception as e:
 #         return JsonResponse({"error": "Invalid OTP"}, status=400)
 
+def user_account(request):
+    user = request.user  # Get the logged-in user
 
+    # Fetch only the logged-in user's test drive bookings
+    test_drive_bookings = TestDriveBooking.objects.filter(user=user).select_related('car')
+
+    # Add formatted price to each booking's car dynamically
+    for booking in test_drive_bookings:
+        booking.car.formatted_price = "{:.2f} lakh".format(booking.car.price / 100000)
+
+    # Generate dates (next 4 days)
+    date_list = [
+        {
+            "date": (datetime.today() + timedelta(days=i)).strftime("%Y-%m-%d"),
+            "weekday": (datetime.today() + timedelta(days=i)).strftime("%a"),
+            "day": (datetime.today() + timedelta(days=i)).strftime("%d"),
+            "month": (datetime.today() + timedelta(days=i)).strftime("%b")
+        }
+        for i in range(4)
+    ]
+
+    # Define time slots
+    time_slots = ["10 AM - 11 AM", "11 AM - 12 PM", "12 PM - 1 PM",
+                  "2 PM - 3 PM", "3 PM - 4 PM", "4 PM - 5 PM"]
+
+    return render(request, "users/user_account_details.html", {
+        'user': user,
+        'test_drive_bookings': test_drive_bookings,
+        'date_list': date_list,
+        'time_slots': time_slots
+    })
+
+@login_required
+def edit_profile(request):
+    user = request.user
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
+
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        mobile_number = request.POST.get('mobile_number')
+
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user_profile.mobile_number = mobile_number
+
+        user.save()
+        user_profile.save()
+
+        messages.success(request, 'Your profile has been updated successfully!')
+        return redirect('users_url:edit_profile')
+
+    return render(request, 'users/edit_profile.html', {'user': user, 'user_profile': user_profile})
