@@ -31,22 +31,6 @@
           ><img src="/media/logo/Car Logo 112.png" width="60px" height="40px" />
           <img src="/media/logo/Car Logo 11.png" width="200px" height="40px" />
         </a>
-        <!--search box -->
-        <input
-          type="search"
-          class="form-control"
-          style="width: 40%"
-          placeholder="Search Cars..." />
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
 
         <div
           class="collapse navbar-collapse text-capitalize"
@@ -56,7 +40,7 @@
               <a class="nav-link" href="{% url 'core:home_page' %}">Buy Car</a>
             </li>
             <li class="nav-item me-3">
-              <a class="nav-link" href="">Sell Car</a>
+              <a class="nav-link" href="{% url 'core:sell_car' %}">Sell Car</a>
             </li>
             <li class="nav-item dropdown">
               <a

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from users.models import UserProfile
 import re
 class Car(models.Model):
     MAKE_CHOICES = [
@@ -52,7 +53,7 @@ class Car(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     car_location = models.CharField(max_length=100)
     car_img=models.ImageField(upload_to='title_car/',default='media/default_img/default_img.png', help_text="Upload an image of the car for the display view.")
-    status = models.CharField(max_length=20, choices=[('AVAILABLE', 'Available'), ('BOOK', 'Book'),('SOLD', 'Sold')], default="AVAILABLE")
+    status = models.CharField(max_length=20, choices=[('AVAILABLE', 'Available'), ('BOOKED', 'Booked'),('SOLD', 'Sold')], default="AVAILABLE")
 
     def __str__(self):
         return f"{self.make} {self.model} ({self.registration_year})"
@@ -84,3 +85,35 @@ class TestDriveBooking(models.Model):
         # Fetch the mobile number from UserProfile, handle cases where it doesn't exist
         mobile_number = getattr(self.user.userprofile, 'mobile_number', 'N/A')
         return f"{self.user.username} ({mobile_number}) - {self.car.make} {self.car.model} - {self.date} at {self.time}"
+    
+# sell car model    
+class CarSubmission(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING_APPROVAL', 'Pending Approval'),
+        ('APPROVED', 'Approved'),
+        ('REJECTED', 'Rejected'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Seller
+    make = models.CharField(max_length=50)
+    model = models.CharField(max_length=100)
+    registration_year = models.IntegerField()
+    fuel_type = models.CharField(max_length=20)
+    price = models.IntegerField()
+    description = models.TextField()
+    image = models.ImageField(upload_to='car_submissions/')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING_APPROVAL')
+    created_at = models.DateTimeField(auto_now_add=True)
+    def seller_first_name(self):
+        return self.user.first_name
+
+    def seller_last_name(self):
+        return self.user.last_name
+
+    def seller_mobile_number(self):
+        """Safely retrieve the mobile number from UserProfile."""
+        user_profile = UserProfile.objects.filter(user=self.user).first()
+        return user_profile.mobile_number if user_profile else "N/A" 
+
+    def __str__(self):
+        return f"{self.make} {self.model} - {self.status}"

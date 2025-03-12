@@ -40,6 +40,20 @@
         id="carouselExample"
         class="carousel carousel-dark slide w-100"
         style="border-radius: 15px">
+        {% if car.status == "BOOKED" or car.status == "SOLD" %}
+        <span
+          class="badge {% if car.status == 'BOOK' %}bg-warning text-dark{% else %}bg-danger{% endif %} text-uppercase p-2"
+          style="
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            border-radius: 10px;
+            z-index: 10;
+          ">
+          {{ car.status }}
+        </span>
+        {% endif %}
         <div class="carousel-inner" style="border-radius: 10px">
           {% for car_image in car.images.all %}
           <div class="carousel-item {% if forloop.first %}active{% endif %}">
@@ -154,12 +168,24 @@
         <i class="bi bi-currency-rupee" style="font-size: 14px"></i>4,000
       </p>
       <div class="row text-center">
+        {% if car.status == "BOOKED" %}
+        <button class="col btn btn-secondary ps-5 pe-5 p-3 m-3" disabled>
+          Not Available
+        </button>
+        {% elif car.status == "SOLD" %}
+        <button
+          class="col btn btn-danger ps-5 pe-5 p-3 m-3"
+          onclick="window.location.href='{% url 'core_url:home_page' %}'">
+          View Other Cars
+        </button>
+        {% else %}
         <button
           type="button"
           class="col btn btn-danger ps-5 pe-5 p-3 m-3"
           onclick="window.location.href='{% url 'core_url:test_drive' car.id %}'">
           BOOK FREE TEST DRIVE
         </button>
+        {% endif %}
       </div>
     </div>
     <div>

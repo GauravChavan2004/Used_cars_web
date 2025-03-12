@@ -130,6 +130,10 @@ STATICFILES_DIRS = [
     BASE_DIR , "static",
 ]
 
+# Login url
+LOGIN_URL = '/user/user_login/'
+
+
 # Base url to serve media files
 MEDIA_URL = '/media/'
 

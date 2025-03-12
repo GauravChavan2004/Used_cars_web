@@ -83,10 +83,12 @@
           <input
             type="range"
             id="price-range"
+            name="max_price"
             min="100000"
             max="2000000"
             step="100000"
-            value="500000" />
+            value="2000000"
+          />
         </div>
 
         <!-- make and Model Filter -->
@@ -220,7 +222,6 @@
         </div>
 
         <!-- Apply Filters Button -->
-        <button type="submit" class="btn btn-primary">Apply Filters</button>
       </form>
     </nav>
 
@@ -235,11 +236,16 @@
               box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
                 0 6px 20px 0 rgba(0, 0, 0, 0.19);
             ">
-            <img
-              src="{% if item.car.car_img %}{{ item.car.car_img.url }}{% else %}{% static 'default_img/default_img.png' %}{% endif %}"
-              class="card-img-top"
-              height=180
-              alt="Car Image" />
+            <div class="position-relative">
+              <img src="{% if item.car.car_img %}{{ item.car.car_img.url }}{% else %}{% static 'default_img/default_img.png' %}{% endif %}" class="card-img-top" height="180" alt="Car Image" loading="lazy"  />
+              
+              <!-- Status Badge -->
+              {% if item.car.status == "BOOKED" %}
+              <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2">BOOKED</span>
+              {% elif item.car.status == "SOLD" %}
+              <span class="badge bg-danger position-absolute top-0 start-0 m-2">SOLD</span>
+              {% endif %}
+          </div>
 
             <div
               class="card-body"
@@ -291,18 +297,17 @@
 <script>
   $(document).ready(function () {
     function fetchFilteredCars() {
-      var formData = $("form").serialize(); // Collect all filter data
-
+      var formData = new URLSearchParams(new FormData(document.querySelector("form")));
+      
       $.ajax({
-        url: "{% url 'core_url:filtered_cars' %}",  // Change this to match your Django view URL
-        type: "GET",
-        data: formData,
-        success: function (response) {
-          $(".row.row-cols-1").html(response.html); // Update the car listing
-        }
+          url: "{% url 'core_url:filtered_cars' %}?" + formData.toString(),
+          type: "GET",
+          success: function (response) {
+              $(".row.row-cols-1").html(response.html);
+          }
       });
     }
-
+  
     // Detect changes on filters
     $(".form-check-input, #price-range").on("change input", function () {
       fetchFilteredCars();

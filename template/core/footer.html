@@ -1,0 +1,154 @@
+<style>
+  footer {
+    background-color: #343a40;
+    position: relative;
+    bottom: 0;
+  }
+  footer a {
+    transition: color 0.3s ease-in-out;
+  }
+  footer a:hover {
+    color: red !important;
+    text-decoration: underline;
+  }
+  html,
+  body {
+    height: 100%;
+  }
+
+  .wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content {
+    flex: 1;
+  }
+
+  @media (max-width: 768px) {
+    .footer .row {
+      text-align: center;
+    }
+    .footer .col-md-3 {
+      margin-bottom: 20px;
+    }
+  }
+</style>
+<footer class="bg-dark text-light py-5">
+  <div class="container">
+    <div class="row">
+      <!-- About Section -->
+      <div class="col-md-3">
+        <h5>About Us</h5>
+        <p>
+          We offer the best deals on pre-owned cars with verified listings. Your
+          trusted marketplace for used cars.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-3">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li>
+            <a
+              href="{% url 'core_url:index' %}"
+              class="text-light text-decoration-none"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="{% url 'core_url:home_page' %}"
+              class="text-light text-decoration-none"
+              >Browse Cars</a
+            >
+          </li>
+          <li>
+            <a
+              href="{% url 'core_url:sell_car' %}"
+              class="text-light text-decoration-none"
+              >Sell Your Car</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Car-Related Services -->
+      <div class="col-md-3">
+        <h5>Car Services</h5>
+        <ul class="list-unstyled">
+          <li>
+            <a
+              href="https://mahatrafficechallan.gov.in/payechallan/PaymentService.htm?_qc=3489a7c901b39feb8d8b8b6e69df6846"
+              class="text-light text-decoration-none"
+              >Check E-Challan</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://parivahan.gov.in/parivahan/"
+              class="text-light text-decoration-none"
+              >RTO Services</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.icicibank.com/personal-banking/loans/car-loan/emi-calculator"
+              class="text-light text-decoration-none"
+              >Car Loan Calculator</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://ci.policybazaar.com/v1?pb_source=google_brand&pb_medium=cpc&pb_term=Policybazaar%20car%20insurance&pb_campaign=PolicyBazaar_Car_Exact00Car_Insurance&gad_source=1&gclid=CjwKCAjwvr--BhB5EiwAd5YbXpG10OfJVTDnbECoLlO78xYjbV1dcL8JTpMT1HdSIjRD6Pe_yIkvZxoCVzYQAvD_BwE"
+              class="text-light text-decoration-none"
+              >Car Insurance Assistance</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact & Social Media -->
+      <div class="col-md-3">
+        <h5>Contact Us</h5>
+        <p>Email: support@yourwebsite.com</p>
+        <p>Phone: +91 9421148036</p>
+        <p>
+          Address: Opp. Neelam's Countryside, Mumbai-Goa Highway, Kankavli,
+          Sindhudurg, 416602
+        </p>
+
+        <div class="mt-3">
+          <a href="#" class="text-light me-2"
+            ><i class="fab fa-facebook fa-lg"></i
+          ></a>
+          <a href="#" class="text-light me-2"
+            ><i class="fab fa-twitter fa-lg"></i
+          ></a>
+          <a href="#" class="text-light me-2"
+            ><i class="fab fa-instagram fa-lg"></i
+          ></a>
+          <a href="#" class="text-light"
+            ><i class="fab fa-linkedin fa-lg"></i
+          ></a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="bg-secondary" />
+
+    <!-- Copyright Section -->
+    <div class="text-center mt-3">
+      <p class="mb-0">
+        &copy; 2025 one-point-car-mall.com. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- Font Awesome for Icons -->
+<script
+  src="https://kit.fontawesome.com/YOUR_KIT_CODE.js"
+  crossorigin="anonymous"></script>

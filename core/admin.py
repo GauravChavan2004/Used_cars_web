@@ -2,6 +2,8 @@ from django.contrib import admin
 from users.models import UserProfile  # Import UserProfile
 from django.utils.timezone import now
 from django.db.models import Case, When, Value, IntegerField
+from .models import CarSubmission
+from django.utils.safestring import mark_safe
 
 # Register your models here.
 from .models import Car, CarImage,TestDriveBooking
@@ -46,9 +48,54 @@ class TestDriveBookingAdmin(admin.ModelAdmin):
 
         return qs
 
-    
-    
 
+@admin.register(CarSubmission)
+class CarSubmissionAdmin(admin.ModelAdmin):
+    list_display = ("make", "model", "price", "seller_first_name", "seller_last_name", "seller_mobile_number", "status", "car_image_preview")
+    list_filter = ("status", "created_at")
+    actions = ["approve_selected", "reject_selected"]
+
+    def approve_selected(self, request, queryset):
+        for car_submission in queryset:
+            if car_submission.status != "APPROVED":
+                car_submission.status = "APPROVED"
+                car_submission.save()
+
+                # Move to Car model
+                Car.objects.create(
+                    make=car_submission.make,
+                    model=car_submission.model,
+                    registration_year=car_submission.registration_year,
+                    fuel_type=car_submission.fuel_type,
+                    price=car_submission.price,
+                    car_img=car_submission.image,  # Ensure this matches the Car model
+                    status="AVAILABLE",
+                    owner=1,  # Default value (Update this as needed)
+                    km_driven=0,  # Default value (Update this as needed)
+                    transmission_type="Manual",  # Default value
+                    insurance_validity="Not Specified",  # Default
+                    insurance_type="Third-Party",  # Default
+                    RTO="Not Provided",  # Default
+                    manufacture_year=car_submission.registration_year,  # Assuming manufacture year is the same
+                    car_location="Not Provided"  # Default
+                )
+
+        self.message_user(request, "Selected cars approved and added to the website.")
+
+    def reject_selected(self, request, queryset):
+        queryset.update(status="REJECTED")
+        self.message_user(request, "Selected cars rejected.")
+
+    approve_selected.short_description = "Approve selected cars"
+    reject_selected.short_description = "Reject selected cars"
+
+    # Show Image Preview in Admin Panel
+    def car_image_preview(self, obj):
+        if obj.image:
+            return mark_safe(f'<a href="{obj.image.url}" target="_blank"><img src="{obj.image.url}" width="100" height="75" style="border-radius:5px;"/></a>')
+        return "No Image"
+
+    car_image_preview.allow_tags = True
+    car_image_preview.short_description = "Car Image"
 
 admin.site.register(Car, CarAdmin)
-admin.site.register(CarImage)
