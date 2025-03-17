@@ -145,84 +145,81 @@
         </form>
       </div>
     </div>
-
-    <div>
-      <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          // Handle date selection
-          document.querySelectorAll('.date-btn').forEach((btn) => {
-            btn.addEventListener('click', function () {
-              document.querySelectorAll('.date-btn').forEach((b) => {
-                b.classList.remove('btn-primary', 'text-white');
-                b.classList.add('btn-outline-primary', 'text-dark'); // Reset to outline and dark text
-              });
-
-              this.classList.remove('btn-outline-primary', 'text-dark');
-              this.classList.add('btn-primary', 'text-white'); // Highlight selected with white text
-              this.previousElementSibling.checked = true;
-            });
-          });
-
-          // Handle time selection
-          document.querySelectorAll('.time-btn').forEach((btn) => {
-            btn.addEventListener('click', function () {
-              document.querySelectorAll('.time-btn').forEach((b) => {
-                b.classList.remove('btn-dark', 'text-white');
-                b.classList.add('btn-outline-dark', 'text-dark'); // Reset to outline and dark text
-              });
-
-              this.classList.remove('btn-outline-dark', 'text-dark');
-              this.classList.add('btn-dark', 'text-white'); // Highlight selected with white text
-              this.previousElementSibling.checked = true;
-            });
-          });
-
-          // Handle form submission via AJAX
-          document
-            .getElementById('testDriveForm')
-            .addEventListener('submit', function (event) {
-              event.preventDefault(); // Prevent normal form submission
-
-              let formData = new FormData(this);
-
-              fetch("{% url 'core:test_drive' car.id %}", {
-                method: 'POST',
-                body: formData,
-                headers: {
-                  'X-CSRFToken': '{{ csrf_token }}',
-                },
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  if (data.success) {
-                    let successModal = new bootstrap.Modal(
-                      document.getElementById('successModal')
-                    );
-                    successModal.show();
-
-                    // Redirect when the user clicks "OK"
-                    document
-                      .getElementById('redirectButton')
-                      .addEventListener('click', function () {
-                        window.location.href = data.redirect_url;
-                      });
-
-                    // Auto redirect after 3 seconds
-                    setTimeout(() => {
-                      window.location.href = data.redirect_url;
-                    }, 3000);
-                  } else {
-                    alert(data.message); // Show error message
-                  }
-                })
-                .catch((error) => console.error('Error:', error));
-            });
-        });
-      </script>
-    </div>
   </div>
 </div>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+  crossorigin="anonymous"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Handle date selection
+    document.querySelectorAll('.date-btn').forEach((btn) => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.date-btn').forEach((b) => {
+          b.classList.remove('btn-primary', 'text-white');
+          b.classList.add('btn-outline-primary', 'text-dark'); // Reset to outline and dark text
+        });
+
+        this.classList.remove('btn-outline-primary', 'text-dark');
+        this.classList.add('btn-primary', 'text-white'); // Highlight selected with white text
+        this.previousElementSibling.checked = true;
+      });
+    });
+
+    // Handle time selection
+    document.querySelectorAll('.time-btn').forEach((btn) => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.time-btn').forEach((b) => {
+          b.classList.remove('btn-dark', 'text-white');
+          b.classList.add('btn-outline-dark', 'text-dark'); // Reset to outline and dark text
+        });
+
+        this.classList.remove('btn-outline-dark', 'text-dark');
+        this.classList.add('btn-dark', 'text-white'); // Highlight selected with white text
+        this.previousElementSibling.checked = true;
+      });
+    });
+
+    // Handle form submission via AJAX
+    document
+      .getElementById('testDriveForm')
+      .addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent normal form submission
+
+        let formData = new FormData(this);
+
+        fetch("{% url 'core:test_drive' car.id %}", {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              let successModal = new bootstrap.Modal(
+                document.getElementById('successModal')
+              );
+              successModal.show();
+
+              // Redirect when the user clicks "OK"
+              document
+                .getElementById('redirectButton')
+                .addEventListener('click', function () {
+                  window.location.href = data.redirect_url;
+                });
+
+              // Auto redirect after 3 seconds
+              setTimeout(() => {
+                window.location.href = data.redirect_url;
+              }, 3000);
+            } else {
+              alert(data.message); // Show error message
+            }
+          })
+          .catch((error) => console.error('Error:', error));
+      });
+  });
+</script>

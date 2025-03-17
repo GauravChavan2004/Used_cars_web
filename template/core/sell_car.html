@@ -16,12 +16,22 @@
 
     <div class="mb-3">
       <label class="form-label">Make (Brand)</label>
-      <input type="text" name="make" class="form-control" required />
+      <input
+        type="text"
+        name="make"
+        class="form-control"
+        placeholder="Maruti"
+        required />
     </div>
 
     <div class="mb-3">
       <label class="form-label">Model</label>
-      <input type="text" name="model" class="form-control" required />
+      <input
+        type="text"
+        name="model"
+        class="form-control"
+        placeholder="Ciaz ALPHA 1.5 SHVS"
+        required />
     </div>
 
     <div class="mb-3">
@@ -30,6 +40,7 @@
         type="number"
         name="registration_year"
         class="form-control"
+        placeholder="2020"
         min="1990"
         max="2025"
         required />
@@ -45,8 +56,31 @@
     </div>
 
     <div class="mb-3">
+      <label class="form-label">Transmission Type</label>
+      <select name="transmission_type" class="form-control" required>
+        <option value="Manual">Manual</option>
+        <option value="Automatic">Automatic</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Kilometers Driven</label>
+      <input
+        type="number"
+        name="kilometers_driven"
+        class="form-control"
+        placeholder="30000"
+        required />
+    </div>
+
+    <div class="mb-3">
       <label class="form-label">Expected Price (in ₹)</label>
-      <input type="number" name="price" class="form-control" required />
+      <input
+        type="number"
+        name="price"
+        class="form-control"
+        placeholder="200000"
+        required />
     </div>
 
     <div class="mb-3">

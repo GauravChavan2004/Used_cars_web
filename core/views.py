@@ -143,25 +143,28 @@ def test_drive(request, car_id):
         selected_date = request.POST.get("selected_date")
         selected_time = request.POST.get("selected_time")
 
-        # Debugging: Print values to check if they exist
-        print(f"Selected Date: {selected_date}, Selected Time: {selected_time}")
-
         if not selected_date or not selected_time:
             messages.error(request, "Please select both date and time.")
+            return redirect("core_url:test_drive", car_id=car1.id)
+
+        try:
+            # Convert string to date object
+            selected_date_obj = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        except ValueError:
+            messages.error(request, "Invalid date format.")
             return redirect("core_url:test_drive", car_id=car1.id)
 
         booking = TestDriveBooking.objects.create(
             user=request.user,
             car=car1,
-            date=selected_date,  # ✅ Ensure this is not None
-            time=selected_time    # ✅ Ensure this is not None
+            date=selected_date_obj,  # ✅ Store as a date object
+            time=selected_time
         )
 
         return JsonResponse({
             "success": True,
             "redirect_url": reverse("core:car_view", kwargs={"car_id": car1.id})
         })
-
     return render(request, "core/test_drive.html", {'car': car1, "date_list": date_list, "time_slots": time_slots})
 
 
@@ -244,6 +247,8 @@ def sell_car(request):
         model = request.POST.get("model")
         registration_year = request.POST.get("registration_year")
         fuel_type = request.POST.get("fuel_type")
+        transmission_type = request.POST.get("transmission_type")
+        kilometers_driven = request.POST.get("kilometers_driven")
         price = request.POST.get("price")
         description = request.POST.get("description")
         image = request.FILES.get("image")
@@ -255,6 +260,8 @@ def sell_car(request):
                 model=model,
                 registration_year=int(registration_year),
                 fuel_type=fuel_type,
+                transmission_type=transmission_type,
+                kilometers_driven=kilometers_driven,
                 price=int(price),
                 description=description,
                 image=image,
@@ -264,6 +271,7 @@ def sell_car(request):
             return redirect("core_url:sell_car")
         else:
             messages.error(request, "All fields are required. Please fill the form correctly.")
+        
 
     return render(request, "core/sell_car.html")
 

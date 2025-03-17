@@ -1,4 +1,3 @@
-<!-- core/templates/core/car_list_partial.html -->
 {% load static %} {% for item in formatted_data %}
 <div class="col">
   <div
@@ -24,7 +23,7 @@
         </a>
       </h6>
       <div class="card-text">
-        <ul>
+        <ul style="margin-left: -30px">
           <li style="list-style: none">{{ item.car.km_driven }} km</li>
           <li>{{ item.car.fuel_type }}</li>
           <li>{{ item.car.transmission_type }}</li>

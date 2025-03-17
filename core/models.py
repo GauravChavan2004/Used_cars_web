@@ -99,6 +99,8 @@ class CarSubmission(models.Model):
     model = models.CharField(max_length=100)
     registration_year = models.IntegerField()
     fuel_type = models.CharField(max_length=20)
+    transmission_type = models.CharField(max_length=20, default='Manual')
+    kilometers_driven = models.CharField(max_length=20, default='0') 
     price = models.IntegerField()
     description = models.TextField()
     image = models.ImageField(upload_to='car_submissions/')

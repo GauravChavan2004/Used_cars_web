@@ -154,6 +154,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'gc6781655@gmail.com'  # Replace with your email
 EMAIL_HOST_PASSWORD = 'qgfhtvqryihrbrzk'  # Replace with your email password
-
+ADMIN_EMAIL = 'gauravchavan101004@gmail.com'
 
 

@@ -13,8 +13,8 @@ from .forms import PasswordResetRequestForm, SetNewPasswordForm
 from .models import UserProfile
 from core.models import TestDriveBooking, Car
 from datetime import datetime, timedelta
-
-
+from core.models import CarSubmission
+from django.utils.timezone import now
 
 
 #@login_required
@@ -179,17 +179,33 @@ def password_reset_complete(request):
 #     except Exception as e:
 #         return JsonResponse({"error": "Invalid OTP"}, status=400)
 
+
+
 def user_account(request):
     user = request.user  # Get the logged-in user
 
-    # Fetch only the logged-in user's test drive bookings
-    test_drive_bookings = TestDriveBooking.objects.filter(user=user).select_related('car')
+    # Fetch user's selling cars
+    selling_car = CarSubmission.objects.filter(user=user)
+    
+    # Debugging logs
+    print("User Cars Count:", selling_car.count())
+    for car in selling_car:
+        print(car.id, car.make, car.model, car.status)
 
-    # Add formatted price to each booking's car dynamically
-    for booking in test_drive_bookings:
+    # Fetch upcoming and past test drives separately
+    upcoming_test_drives = TestDriveBooking.objects.filter(
+        user=user, date__gte=now().date()
+    ).select_related('car').order_by('date')  # Ascending order
+
+    past_test_drives = TestDriveBooking.objects.filter(
+        user=user, date__lt=now().date()
+    ).select_related('car').order_by('-date')  # Descending order
+
+    # Format car price for display
+    for booking in list(upcoming_test_drives) + list(past_test_drives):
         booking.car.formatted_price = "{:.2f} lakh".format(booking.car.price / 100000)
 
-    # Generate dates (next 4 days)
+    # Generate next 4 available dates
     date_list = [
         {
             "date": (datetime.today() + timedelta(days=i)).strftime("%Y-%m-%d"),
@@ -200,16 +216,19 @@ def user_account(request):
         for i in range(4)
     ]
 
-    # Define time slots
+    # Define available time slots
     time_slots = ["10 AM - 11 AM", "11 AM - 12 PM", "12 PM - 1 PM",
                   "2 PM - 3 PM", "3 PM - 4 PM", "4 PM - 5 PM"]
 
     return render(request, "users/user_account_details.html", {
         'user': user,
-        'test_drive_bookings': test_drive_bookings,
+        'upcoming_test_drives': upcoming_test_drives,
+        'past_test_drives': past_test_drives,
         'date_list': date_list,
-        'time_slots': time_slots
+        'time_slots': time_slots,
+        'selling_cars': selling_car
     })
+
 
 @login_required
 def edit_profile(request):
