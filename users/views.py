@@ -76,7 +76,7 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     messages.success(request, "You have successfully logged out.")
-    return redirect('users_url:user_login')
+    return redirect('/')
 
 def user_otp(request):
     return render(request, 'users/user_account_details.html')
@@ -180,7 +180,7 @@ def password_reset_complete(request):
 #         return JsonResponse({"error": "Invalid OTP"}, status=400)
 
 
-
+@login_required
 def user_account(request):
     user = request.user  # Get the logged-in user
 

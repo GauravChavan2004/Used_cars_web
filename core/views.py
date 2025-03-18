@@ -16,7 +16,6 @@ from django.template.loader import render_to_string
 
 
 # Create your views here.
-@login_required
 def index(request):
     data = Car.objects.all()
     formatted_data = []
@@ -30,7 +29,6 @@ def index(request):
         })
     return render(request,"core/index.html",{'formatted_data': formatted_data})
 
-@login_required
 def home_page(request):
     data = Car.objects.all()
     formatted_data = []
@@ -114,7 +112,7 @@ def indian_format(value):
     except (ValueError, TypeError):
         return value  # If there's an error, return the value as it is
     
-@login_required    
+
 def car_view(request, car_id):
     car = get_object_or_404(Car, id=car_id)  # Fetch car by ID
     car.formatted_price = indian_format(car.price)  # Format only the selected car
