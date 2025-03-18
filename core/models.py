@@ -46,7 +46,7 @@ class Car(models.Model):
     owner = models.IntegerField()
     km_driven = models.IntegerField()
     transmission_type = models.CharField(max_length=20, choices=[('Manual', 'Manual'), ('Automatic', 'Automatic')])
-    fuel_type = models.CharField(max_length=20, choices=[('Petrol', 'Petrol'), ('Diesel', 'Diesel'),('Petrol+CNG', 'Petrol+CNG'), ('ELECTRIC', 'Electric')])
+    fuel_type = models.CharField(max_length=20, choices=[('Petrol', 'Petrol'), ('Diesel', 'Diesel'),('CNG', 'CNG'), ('ELECTRIC', 'Electric')])
     insurance_validity = models.CharField(max_length=100)
     insurance_type = models.CharField(max_length=20, choices=[('Comprehensive', 'Comprehensive'), ('Third-Party', 'Third-Party')])
     RTO = models.CharField(max_length=20)
