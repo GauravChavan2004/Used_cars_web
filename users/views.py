@@ -53,7 +53,8 @@ def user_register(request):
             password=password1
         )
         user.save()
-        UserProfile.objects.create(user=user, mobile_number=mobile_number)
+        user.userprofile.mobile_number = mobile_number
+        user.userprofile.save()
         messages.success(request, 'Account created successfully. You can now log in.')
         return redirect('users_url:user_login')
     return render(request, 'users/register.html')
