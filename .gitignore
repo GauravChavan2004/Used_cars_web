@@ -1,2 +1,2 @@
-# Ignore the media/cars directory
-.media/cars/
+# Ignore the entire media directory
+/media/
