@@ -4,13 +4,11 @@ from django.utils.timezone import now
 from django.db.models import Case, When, Value, IntegerField
 from .models import CarSubmission
 from django.utils.safestring import mark_safe
-
-# Register your models here.
 from .models import Car, CarImage,TestDriveBooking
 
 class CarImageInline(admin.TabularInline):
     model = CarImage
-    extra = 1  # Number of empty image fields to show by default
+    extra = 1  
 
 class CarAdmin(admin.ModelAdmin):
     list_display = ('make', 'model', 'registration_year', 'km_driven', 'price', 'car_location', 'owner','status')

@@ -7,7 +7,7 @@ class Car(models.Model):
         ('Maruti', 'Maruti'),
         ('Hyundai', 'Hyundai'),
         ('Tata', 'Tata'),
-        ('Toyoto', 'Toyota'),
+        ('Toyota', 'Toyota'),
         ('Honda', 'Honda'),
         ('Ford', 'Ford'),
         ('Kia', 'Kia'),
@@ -26,7 +26,7 @@ class Car(models.Model):
         ('Feb', 'February'),
         ('March', 'March'),
         ('April', 'April'),
-        ('May', 'may'),
+        ('May', 'May'),
         ('June', 'June'),
         ('July', 'July'),
         ('Aug', 'August'),
@@ -47,13 +47,22 @@ class Car(models.Model):
     km_driven = models.IntegerField()
     transmission_type = models.CharField(max_length=20, choices=[('Manual', 'Manual'), ('Automatic', 'Automatic')])
     fuel_type = models.CharField(max_length=20, choices=[('Petrol', 'Petrol'), ('Diesel', 'Diesel'),('CNG', 'CNG'), ('ELECTRIC', 'Electric')])
-    insurance_validity = models.CharField(max_length=100)
-    insurance_type = models.CharField(max_length=20, choices=[('Comprehensive', 'Comprehensive'), ('Third-Party', 'Third-Party')])
+    insurance_validity = models.CharField(max_length=100, blank=True, null=True)
+    insurance_type = models.CharField(max_length=20, choices=[('Comprehensive', 'Comprehensive'), ('Third-Party', 'Third-Party'),('No Insurance', 'No Insurance')])
     RTO = models.CharField(max_length=20)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     car_location = models.CharField(max_length=100)
     car_img=models.ImageField(upload_to='title_car/',default='media/default_img/default_img.png', help_text="Upload an image of the car for the display view.")
     status = models.CharField(max_length=20, choices=[('AVAILABLE', 'Available'), ('BOOKED', 'Booked'),('SOLD', 'Sold')], default="AVAILABLE")
+
+    def save(self, *args, **kwargs):
+        """Automatically set 'Need Renewal' if insurance type is 'No Insurance'."""
+        if self.insurance_type == "No Insurance":
+            self.insurance_validity = "Need Renewal"
+        elif not self.insurance_validity or self.insurance_validity.strip() == "":
+            self.insurance_validity = "Valid"  # Default to 'Valid' if insurance exists
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.make} {self.model} ({self.registration_year})"

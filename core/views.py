@@ -54,7 +54,7 @@ def home_page(request):
 
     if max_price:
         cars = cars.filter(price__lte=max_price)
-    print("Filtered Cars Count:", cars.count())
+    
 
     cars = cars.annotate(
     status_upper=Upper('status')
@@ -198,7 +198,7 @@ def edit_test_drive(request, booking_id):
 
 
 def filtered_cars(request):
-    cars = Car.objects.filter(status='AVAILABLE')  # Only show available cars
+    cars = Car.objects.all()  # Show all cars (Available, Sold, Booked)
 
     # Apply filters
     selected_makes = request.GET.getlist("make")
@@ -213,16 +213,25 @@ def filtered_cars(request):
     if selected_year:
         cars = cars.filter(registration_year__gte=int(selected_year))
 
-# Handle price range correctly
-    selected_price = request.GET.get("max_price")  
-
+    # Handle price range correctly
+    selected_price = request.GET.get("max_price")
     try:
         max_price = int(selected_price) if selected_price else 2000000  # Default max price
     except ValueError:
         max_price = 2000000  # Fallback in case of invalid input
 
     cars = cars.filter(price__range=(100000, max_price))  # Filter by price range
-
+    cars = cars.annotate(
+    status_upper=Upper('status')
+    ).annotate(
+        status_order=Case(
+            When(status_upper="AVAILABLE", then=Value(1)),
+            When(status_upper="BOOKED", then=Value(2)),
+            When(status_upper="SOLD", then=Value(3)),
+            default=Value(4),
+            output_field=IntegerField(),
+        )
+    ).order_by('status_order')
 
     if not cars.exists():  # If no cars are found
         html = "<p class='fs-5 w-100'>Sorry! No car is available for the selected criteria.<br>Please search again or browse through our similar range of cars.</p>"
@@ -236,6 +245,7 @@ def filtered_cars(request):
         html = render_to_string("core/filtered_car_list.html", {"formatted_data": formatted_data}, request=request)
 
     return JsonResponse({"html": html})
+
 
 
 @login_required

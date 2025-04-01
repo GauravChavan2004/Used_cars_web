@@ -100,7 +100,7 @@
             <div class="row">
               {% if upcoming_test_drives %}
                 {% for booking in upcoming_test_drives %}
-                <div class="col-md-4 mb-2">
+                <div class="col-md-4 mb-2" style="width: 35%;">
 
                     <div class="card h-100 p-1 shadow">
                       <!-- Car Image -->
@@ -109,8 +109,12 @@
                            alt="Car Image" />
             
                       <div class="card-body" style="border-top: 2px solid gray; border-radius: 10px">
-                        <h6 class="card-title text-truncate" style="font-size: 22px">
+                        <h6 class="card-title text-truncate" style="font-size: 22px;">
+                          <a
+                              href="{% url 'core_url:car_view' booking.car.id %}"
+                              class="stretched-link" style="text-decoration: none; color: black;"> 
                           {{ booking.car.registration_year }} {{ booking.car.make }} {{ booking.car.model }}
+                        </a>
                         </h6>
                         <div class="card-text d-flex flex-column align-items-center text-center">
                           <ul class="p-0 m-0">
@@ -126,7 +130,7 @@
                       </div>
                     </div>
                   </div> 
-                  <div class="col-md-8 mb-2 p-3">
+                  <div class="col-md-8 mb-2 p-3" style="width: 65%;">
                     <h5>Booking Details :-</h5>
                     <p><strong>Test Drive Date:</strong> {{ booking.date }}</p>
                     <p><strong>Time:</strong> {{ booking.time }}</p>

@@ -14,6 +14,11 @@
     width: 100%;
     margin-bottom: 10px;
   }
+  .spinner-border {
+    width: 1rem;
+    height: 1rem;
+    margin-left: 5px;
+  }
 </style>
 <div class="container p-3" style="margin-top: 100px">
   {% if messages %}
@@ -34,11 +39,15 @@
             class="btn-close"
             data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" id="modalMessage">
           Your test drive has been booked successfully!
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" id="redirectButton">
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="redirectButton"
+            data-bs-dismiss="modal">
             OK
           </button>
         </div>
@@ -48,19 +57,17 @@
 
   <h3 class="mb-3">Book Test Drive</h3>
   <div class="row">
-    <!-- Car Details -->
     <div class="col-md-5">
       <div
         class="card h-100 p-2 w-75"
         style="
-          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
-            0 6px 20px 0 rgba(0, 0, 0, 0.19);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2),
+            0 6px 20px rgba(0, 0, 0, 0.19);
         ">
         <img
           src="{% if car.car_img %}{{ car.car_img.url }}{% else %}{% static 'default_img/default_img.png' %}{% endif %}"
           class="card-img-top"
           alt="Car Image" />
-
         <div
           class="card-body"
           style="border-top: 2px solid gray; border-radius: 10px">
@@ -69,19 +76,18 @@
           </h6>
           <div class="card-text">
             <ul>
-              <li style="list-style: none">{{ car.km_driven }} km</li>
+              <li>{{ car.km_driven }} km</li>
               <li>{{ car.fuel_type }}</li>
               <li>{{ car.transmission_type }}</li>
             </ul>
             <h5>
-              <i class="bi bi-currency-rupee"></i> {{ car.formatted_price}}
+              <i class="bi bi-currency-rupee"></i> {{ car.formatted_price }}
             </h5>
           </div>
         </div>
       </div>
     </div>
 
-    <!--Test Drive details-->
     <div class="col-md-7">
       <div class="card p-4">
         <h5>📍 Test drive at One Point Car Mall</h5>
@@ -109,8 +115,7 @@
               <button
                 type="button"
                 class="btn {% if forloop.first %}btn-outline-primary{% else %}btn-outline-secondary{% endif %} date-btn">
-                {{ date.weekday }} <br />
-                {{ date.day }} {{ date.month }}
+                {{ date.weekday }} <br />{{ date.day }} {{ date.month }}
               </button>
             </label>
             {% endfor %}
@@ -139,8 +144,10 @@
             {% endfor %}
           </div>
 
-          <button type="submit" class="btn btn-primary mt-3">
-            Book Test Drive
+          <button type="submit" class="btn btn-primary mt-3" id="submitButton">
+            Book Test Drive<span
+              class="spinner-border d-none"
+              id="loadingSpinner"></span>
           </button>
         </form>
       </div>
@@ -180,46 +187,54 @@
         this.previousElementSibling.checked = true;
       });
     });
-
-    // Handle form submission via AJAX
-    document
-      .getElementById('testDriveForm')
-      .addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent normal form submission
-
-        let formData = new FormData(this);
-
-        fetch("{% url 'core:test_drive' car.id %}", {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              let successModal = new bootstrap.Modal(
-                document.getElementById('successModal')
-              );
-              successModal.show();
-
-              // Redirect when the user clicks "OK"
-              document
-                .getElementById('redirectButton')
-                .addEventListener('click', function () {
-                  window.location.href = data.redirect_url;
-                });
-
-              // Auto redirect after 3 seconds
-              setTimeout(() => {
-                window.location.href = data.redirect_url;
-              }, 3000);
-            } else {
-              alert(data.message); // Show error message
-            }
-          })
-          .catch((error) => console.error('Error:', error));
-      });
   });
+  // Handle form submission via AJAX
+  document
+    .getElementById('testDriveForm')
+    .addEventListener('submit', function (event) {
+      event.preventDefault();
+      let submitButton = document.getElementById('submitButton');
+      let spinner = document.getElementById('loadingSpinner');
+      submitButton.disabled = true;
+      spinner.classList.remove('d-none');
+
+      let formData = new FormData(this);
+      fetch("{% url 'core:test_drive' car.id %}", {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          spinner.classList.add('d-none');
+          submitButton.disabled = false;
+          if (data.success) {
+            let successModal = new bootstrap.Modal(
+              document.getElementById('successModal')
+            );
+            document.getElementById('modalMessage').textContent =
+              'Your test drive has been booked successfully!';
+            successModal.show();
+            setTimeout(() => {
+              window.location.href = data.redirect_url;
+            }, 3000);
+          } else {
+            document.getElementById('modalMessage').textContent = data.message;
+            let errorModal = new bootstrap.Modal(
+              document.getElementById('successModal')
+            );
+            errorModal.show();
+          }
+        })
+        .catch((error) => {
+          spinner.classList.add('d-none');
+          submitButton.disabled = false;
+          document.getElementById('modalMessage').textContent =
+            'Please select both date and time for Test Drive.';
+          let errorModal = new bootstrap.Modal(
+            document.getElementById('successModal')
+          );
+          errorModal.show();
+        });
+    });
 </script>

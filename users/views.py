@@ -67,7 +67,8 @@ def user_login(request):
 
         if user is not None:
             auth.login(request,user)
-            return redirect('/')
+            next_url = request.GET.get('next', '/')
+            return redirect(next_url)
         else:
             messages.error(request, 'Invalid username and password !!')
             return redirect('users_url:user_login')

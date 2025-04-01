@@ -52,10 +52,36 @@
     display: flex;
     gap: 20px;
     font-size: 14px;
-  } 
-  
 
-  @media (max-width: 768px) {
+  }
+  .call-button {
+    position: fixed;
+    bottom: 20px; /* Distance from bottom */
+    right: 20px; /* Distance from right */
+    background-color: #0d6efd; /* Bootstrap primary color */
+    color: white;
+    padding: 15px;
+    font-size: 24px;
+    border-radius: 50%;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    z-index: 999; /* Ensures it stays above other content */
+  }
+
+  .call-button i {
+    font-size: 24px;
+  }
+
+  .call-button:hover {
+    background-color: #004aad;
+  }
+@media (max-width: 768px) {
     .sidebar {
       position: relative;
       height: auto;
@@ -66,13 +92,17 @@
       margin-left: 0;
       padding: 0;
     }
-  }
+}
 </style>
 <div class="container" style="margin-top: 100px">
-  <div class="row">
+  <div class="row"> 
     <!-- Sidebar -->
     <nav class="col-md-3 col-lg-2 sidebar">
-      <h6 for="price-range"><i class="bi bi-currency-rupee"></i> Budget</h6>
+      <div class="filter_header">
+        <h6 for="price-range"><i class="bi bi-currency-rupee"></i> Budget</h6>
+        
+      </div>
+    
       <form>
         <!-- Price Range Filter -->
         <div>
@@ -132,6 +162,15 @@
               value="Diesel"
               id="fuelDiesel" />
             <label class="form-check-label" for="fuelDiesel">Diesel</label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="fuelType"
+              value="CNG"
+              id="fuelcng" />
+            <label class="form-check-label" for="fuelPetrol">Petrol+CNG</label>
           </div>
           <div class="form-check">
             <input
@@ -227,6 +266,9 @@
 
     <!-- Main Content -->
     <main class="col-md-9 col-lg-10 content">
+      <button type="button" id="clearFilters" class="btn btn-outline-secondary btn-sm rounded-pill mt-2 px-3 " style="display: none;">
+        <i class="fas fa-times"></i> Clear Filters
+      </button>
       <div class="row row-cols-1 row-cols-md-3 g-4 p-4">
         {% for item in formatted_data %}
         <div class="col">
@@ -275,6 +317,14 @@
       </div>
     </main>
   </div>
+  <a
+      href="tel:+919356632445"
+      class="call-button"
+      data-bs-toggle="tooltip"
+      data-bs-placement="left"
+      title="Instant Call for inquiries">
+      <i class="bi bi-telephone-fill"></i>
+    </a>
 </div>
 
 <script>
@@ -297,26 +347,71 @@
 <script>
   $(document).ready(function () {
     function fetchFilteredCars() {
-      var formData = new URLSearchParams(new FormData(document.querySelector("form")));
-      
-      $.ajax({
-          url: "{% url 'core_url:filtered_cars' %}?" + formData.toString(),
-          type: "GET",
-          success: function (response) {
-              $(".row.row-cols-1").html(response.html);
-          }
-      });
+        var formData = new URLSearchParams(new FormData(document.querySelector("form")));
+        
+        $.ajax({
+            url: "{% url 'core_url:filtered_cars' %}?" + formData.toString(),
+            type: "GET",
+            success: function (response) {
+                $(".row.row-cols-1").html(response.html);
+            }
+        });
+
+        toggleClearFiltersButton(); // Check if filters are applied
     }
-  
-    // Detect changes on filters
+
+    function toggleClearFiltersButton() {
+        var hasFilters = false;
+
+        // Check if any checkbox or radio button is checked
+        $(".form-check-input:checked").each(function () {
+            hasFilters = true;
+        });
+
+        // Check if price range is not at default
+        if ($("#price-range").val() !== "2000000") {
+            hasFilters = true;
+        }
+
+        // Show or hide the button
+        if (hasFilters) {
+            $("#clearFilters").fadeIn();
+        } else {
+            $("#clearFilters").fadeOut();
+        }
+    }
+
+    // Detect changes in filters and fetch results
     $(".form-check-input, #price-range").on("change input", function () {
-      fetchFilteredCars();
+        fetchFilteredCars();
     });
 
-    // Submit button should also trigger AJAX
+    // Handle form submission via AJAX
     $("form").on("submit", function (e) {
-      e.preventDefault(); // Prevent form from submitting traditionally
-      fetchFilteredCars();
+        e.preventDefault();
+        fetchFilteredCars();
+    });
+
+    // Handle Clear Filters Button
+    $("#clearFilters").click(function () {
+        $("input[type='checkbox'], input[type='radio']").prop("checked", false);
+        $("#price-range").val(2000000); // Reset price range
+        $("#price-display").text("₹ 100000");
+        $("#max-price-display").text("₹ 20,00,000");
+
+        fetchFilteredCars(); // Reload cars with default filters
+    });
+
+    // Run on page load to check filters
+    toggleClearFiltersButton();
+});
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(
+      document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
     });
   });
 </script>

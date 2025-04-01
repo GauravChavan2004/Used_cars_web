@@ -100,6 +100,23 @@
   }
 </style>
 <div class="container-fluid">
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <script defer>
+      alert('{{message}}');
+    </script>
+
+    {% endfor %}
+  </ul>
+  {% endif %} {% if messages %}
+  <!-- Hidden element to store the message -->
+  <ul class="list-unstyled d-none">
+    {% for message in messages %}
+    <li class="django-message" data-message="{{ message }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
   <img src="{% static 'media/bg_img/2.jpg' %}" width="100%" />
   <div class="head_info">
     <h1>
