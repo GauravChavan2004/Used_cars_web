@@ -35,7 +35,7 @@ def home_page(request):
     #Filter Backend
     makes = Car.MAKE_CHOICES
     selected_makes = request.GET.getlist('make')  # Get selected makes from the form
-    selected_fuel = request.GET.get('fuelType')
+    selected_fuel = request.GET.getlist('fuelType')
     selected_year = request.GET.get('yearType')
     try:
         max_price = int(request.GET.get('max_price', 2000000))  # Convert string to int
@@ -205,9 +205,9 @@ def filtered_cars(request):
     if selected_makes:
         cars = cars.filter(make__in=selected_makes)
 
-    selected_fuel = request.GET.get("fuelType")
+    selected_fuel = request.GET.getlist("fuelType")
     if selected_fuel:
-        cars = cars.filter(fuel_type=selected_fuel)
+        cars = cars.filter(fuel_type__in=selected_fuel)
 
     selected_year = request.GET.get("yearType")
     if selected_year:

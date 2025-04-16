@@ -25,7 +25,7 @@ admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
 # Register UserProfile separately (optional)
-@admin.register(UserProfile)
+
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'mobile_number')
     search_fields = ('user__username', 'mobile_number')

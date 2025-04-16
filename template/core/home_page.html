@@ -148,7 +148,7 @@
           <div class="form-check">
             <input
               class="form-check-input"
-              type="radio"
+              type="checkbox"
               name="fuelType"
               value="Petrol"
               id="fuelPetrol" />
@@ -157,7 +157,7 @@
           <div class="form-check">
             <input
               class="form-check-input"
-              type="radio"
+              type="checkbox"
               name="fuelType"
               value="Diesel"
               id="fuelDiesel" />
@@ -166,7 +166,7 @@
           <div class="form-check">
             <input
               class="form-check-input"
-              type="radio"
+              type="checkbox"
               name="fuelType"
               value="CNG"
               id="fuelcng" />
@@ -175,7 +175,7 @@
           <div class="form-check">
             <input
               class="form-check-input"
-              type="radio"
+              type="checkbox"
               name="fuelType"
               value="Electric"
               id="fuelElectric" />
@@ -347,6 +347,7 @@
 <script>
   $(document).ready(function () {
     function fetchFilteredCars() {
+      
         var formData = new URLSearchParams(new FormData(document.querySelector("form")));
         
         $.ajax({

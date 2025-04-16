@@ -15,7 +15,9 @@
     {% csrf_token %}
 
     <div class="mb-3">
-      <label class="form-label">Make (Brand)</label>
+      <label class="form-label"
+        >Make (Brand)<span style="color: red">*</span></label
+      >
       <input
         type="text"
         name="make"
@@ -25,7 +27,7 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Model</label>
+      <label class="form-label">Model<span style="color: red">*</span></label>
       <input
         type="text"
         name="model"
@@ -35,7 +37,9 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Registration Year</label>
+      <label class="form-label"
+        >Registration Year<span style="color: red">*</span></label
+      >
       <input
         type="number"
         name="registration_year"
@@ -47,7 +51,9 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Fuel Type</label>
+      <label class="form-label"
+        >Fuel Type<span style="color: red">*</span></label
+      >
       <select name="fuel_type" class="form-control" required>
         <option value="Petrol">Petrol</option>
         <option value="Diesel">Diesel</option>
@@ -56,7 +62,9 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Transmission Type</label>
+      <label class="form-label"
+        >Transmission Type<span style="color: red">*</span></label
+      >
       <select name="transmission_type" class="form-control" required>
         <option value="Manual">Manual</option>
         <option value="Automatic">Automatic</option>
@@ -64,7 +72,9 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Kilometers Driven</label>
+      <label class="form-label"
+        >Kilometers Driven<span style="color: red">*</span></label
+      >
       <input
         type="number"
         name="kilometers_driven"
@@ -74,7 +84,9 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Expected Price (in ₹)</label>
+      <label class="form-label"
+        >Expected Price (in ₹)<span style="color: red">*</span></label
+      >
       <input
         type="number"
         name="price"
@@ -85,15 +97,13 @@
 
     <div class="mb-3">
       <label class="form-label">Car Description</label>
-      <textarea
-        name="description"
-        class="form-control"
-        rows="4"
-        required></textarea>
+      <textarea name="description" class="form-control" rows="4"></textarea>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Upload Car Image</label>
+      <label class="form-label"
+        >Upload Car Image<span style="color: red">*</span></label
+      >
       <input type="file" name="image" class="form-control" required />
     </div>
 
