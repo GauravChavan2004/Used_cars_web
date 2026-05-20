@@ -3,3 +3,6 @@ gunicorn
 django-jazzmin
 mysqlclient
 Pillow
+django-crispy-forms
+django-filter
+whitenoise
