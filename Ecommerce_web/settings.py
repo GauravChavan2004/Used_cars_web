@@ -78,17 +78,24 @@ WSGI_APPLICATION = 'Ecommerce_web.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',  # Use MySQL as the database engine
+#         'NAME': 'one_point_car_mall_db',          # The name of your MySQL database
+#         'USER': 'root',         # Your MySQL username
+#         'PASSWORD': 'root',     # Your MySQL password
+#         'HOST': 'localhost',                   # The hostname of the database server (usually 'localhost')
+#         'PORT': '3306',                        # The port of the MySQL database (default is 3306)
+#     }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Use MySQL as the database engine
-        'NAME': 'one_point_car_mall_db',          # The name of your MySQL database
-        'USER': 'root',         # Your MySQL username
-        'PASSWORD': 'root',     # Your MySQL password
-        'HOST': 'localhost',                   # The hostname of the database server (usually 'localhost')
-        'PORT': '3306',                        # The port of the MySQL database (default is 3306)
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
