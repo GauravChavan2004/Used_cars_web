@@ -21,9 +21,13 @@ class CarAdmin(admin.ModelAdmin):
 
 @admin.register(TestDriveBooking)
 class TestDriveBookingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'get_mobile_number', 'car', 'date', 'time', 'status')
+    list_display = ('get_user_full_name', 'get_mobile_number', 'car', 'date', 'time', 'status')
     list_filter = ('date', 'car')
     search_fields = ('user__username', 'car__make', 'car__model', 'user__userprofile__mobile_number')
+
+    def get_user_full_name(self, obj):
+        return f"{obj.user.first_name} {obj.user.last_name}"
+    get_user_full_name.short_description = 'User Name'  # Set column title
 
     def get_mobile_number(self, obj):
         """Fetch mobile number from UserProfile"""
@@ -96,4 +100,4 @@ class CarSubmissionAdmin(admin.ModelAdmin):
     car_image_preview.allow_tags = True
     car_image_preview.short_description = "Car Image"
 
-admin.site.register(Car, CarAdmin)
+admin.site.register(Car, CarAdmin)                  

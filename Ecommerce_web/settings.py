@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-778g!f$1d4mo3s6ozzn^c07topkc-nhe4fpjc+w)9ba=&o2nr@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -153,8 +153,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'gc6781655@gmail.com'  # Replace with your email
-EMAIL_HOST_PASSWORD = 'qgfhtvqryihrbrzk'  # Replace with your email password
+EMAIL_HOST_USER = 'onepointcarmall@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'uttbgwvmpliztcsn'  # Replace with your email password
 ADMIN_EMAIL = 'gauravchavan101004@gmail.com'
 
 

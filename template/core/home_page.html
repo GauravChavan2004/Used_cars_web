@@ -281,7 +281,7 @@
             <div class="position-relative">
               <img src="{% if item.car.car_img %}{{ item.car.car_img.url }}{% else %}{% static 'default_img/default_img.png' %}{% endif %}" class="card-img-top" height="180" alt="Car Image" loading="lazy"  />
               
-              <!-- Status Badge -->
+              <!-- Status Badge --> 
               {% if item.car.status == "BOOKED" %}
               <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2">BOOKED</span>
               {% elif item.car.status == "SOLD" %}
