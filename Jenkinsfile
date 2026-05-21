@@ -9,15 +9,9 @@ pipeline {
             }
         }
 
-        stage('Stop Old Containers') {
+        stage('Run Ansible Playbook') {
             steps {
-                bat 'docker-compose down || exit 0'
-            }
-        }
-
-        stage('Build and Run Containers') {
-            steps {
-                bat 'docker-compose up --build -d'
+                bat 'ansible-playbook ansible/deploy.yml -i ansible/inventory.ini'
             }
         }
     }
