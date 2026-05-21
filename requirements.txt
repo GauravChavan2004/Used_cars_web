@@ -6,3 +6,4 @@ Pillow
 django-crispy-forms
 django-filter
 whitenoise
+PyMySQL
