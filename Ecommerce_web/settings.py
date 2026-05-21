@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'one_point_car_mall_db',          # The name of your MySQL database
         'USER': 'root',         # Your MySQL username
         'PASSWORD': 'root',     # Your MySQL password
-        'HOST': 'localhost',                   # The hostname of the database server (usually 'localhost')
+        'HOST': 'db',                   # The hostname of the database server (usually 'localhost')
         'PORT': '3306',                        # The port of the MySQL database (default is 3306)
     }
 }
