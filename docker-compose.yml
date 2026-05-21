@@ -29,7 +29,6 @@ services:
       "
 
     volumes:
-      - .:/app
       - ./media:/app/media
       - ./static:/app/static
       - ./staticfiles:/app/staticfiles

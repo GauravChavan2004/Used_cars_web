@@ -151,7 +151,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 JAZZMIN_SETTINGS={
     'site_header': "One Point Car Mall",
     'site_brand': "One Point Car Mall",
-    'site_logo': "media/logo/Car Logo 1 (1).png",
+    'site_logo': "images/logo/web_logo.png",
     'copyright':"one-point-car-mall.com",
 }
 
