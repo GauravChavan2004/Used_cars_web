@@ -11,7 +11,7 @@ pipeline {
 
         stage('Run Ansible Playbook') {
             steps {
-                bat 'wsl ansible-playbook myansibleprj/django_prj_deploy.yml -i myansibleprj/inventory.ini'
+                bat 'wsl ansible-playbook ~/home/myansibleprj/django_prj_deploy.yml'
             }
         }
     }
