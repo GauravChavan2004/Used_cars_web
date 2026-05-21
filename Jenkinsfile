@@ -9,17 +9,21 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Stop Old Containers') {
             steps {
-                bat 'docker build -t django_project .'
+                bat 'docker-compose down || exit 0'
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Build and Run Containers') {
             steps {
-                bat 'docker stop django_container || exit 0'
-                bat 'docker rm django_container || exit 0'
-                bat 'docker run -d -p 8000:8000 --name django_container django_project'
+                bat 'docker-compose up --build -d'
+            }
+        }
+
+        stage('Run Migrations') {
+            steps {
+                bat 'docker exec django_container python manage.py migrate'
             }
         }
     }
