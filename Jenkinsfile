@@ -23,7 +23,7 @@ pipeline {
 
         stage('Wait for MySQL') {
             steps {
-                bat 'timeout /t 40'
+                sleep(time: 40, unit: 'SECONDS')
             }
         }
 
