@@ -21,6 +21,12 @@ pipeline {
             }
         }
 
+        stage('Wait for MySQL') {
+            steps {
+                bat 'timeout /t 40'
+            }
+        }
+
         stage('Run Migrations') {
             steps {
                 bat 'docker exec django_container python manage.py migrate'
