@@ -20,17 +20,5 @@ pipeline {
                 bat 'docker-compose up --build -d'
             }
         }
-
-        stage('Wait for MySQL') {
-            steps {
-                sleep(time: 40, unit: 'SECONDS')
-            }
-        }
-
-        stage('Run Migrations') {
-            steps {
-                bat 'docker exec django_container python manage.py migrate'
-            }
-        }
     }
 }
