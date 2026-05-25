@@ -52,7 +52,7 @@ class Car(models.Model):
     RTO = models.CharField(max_length=20)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     car_location = models.CharField(max_length=100)
-    car_img=models.ImageField(upload_to='title_car/',default='media/default_img/default_img.png', help_text="Upload an image of the car for the display view.")
+    car_img=models.ImageField(upload_to='title_car/',default='default_img/default_img.png', help_text="Upload an image of the car for the display view.")
     status = models.CharField(max_length=20, choices=[('AVAILABLE', 'Available'), ('BOOKED', 'Booked'),('SOLD', 'Sold')], default="AVAILABLE")
 
     def save(self, *args, **kwargs):
