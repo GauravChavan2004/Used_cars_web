@@ -29,12 +29,26 @@ services:
       "
     volumes:
       - .:/app
-      - ./staticfiles:/app/staticfiles  # Only for collected static files
+      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media
     ports:
       - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_container
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media
+    depends_on:
+      - web
+    restart: always
 
 volumes:
   mysql_data:

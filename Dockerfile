@@ -6,8 +6,8 @@ COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Create media directory
+RUN mkdir -p /app/media /app/staticfiles
 
 EXPOSE 8000
 
