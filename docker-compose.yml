@@ -2,7 +2,6 @@ version: '3.9'
 services:
   db:
     image: mysql:8.0
-    container_name: mysql_container
     restart: always
     environment:
       MYSQL_DATABASE: one_point_car_mall_db
@@ -19,7 +18,6 @@ services:
 
   web:
     build: .
-    container_name: django_container
     command: >
       sh -c "
       python manage.py migrate &&
@@ -38,7 +36,6 @@ services:
 
   nginx:
     image: nginx:latest
-    container_name: nginx_container
     ports:
       - "80:80"
     volumes:
