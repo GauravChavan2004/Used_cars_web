@@ -15,7 +15,10 @@ pipeline {
 
         stage('Run Ansible Playbook') {
             steps {
-                bat 'wsl ansible-playbook /home/myansibleprj/django_prj_deploy.yml'
+                bat """
+                wsl ansible-playbook /home/myansibleprj/django_prj_deploy.yml ^
+                -e workspace_path='/mnt/c/ProgramData/Jenkins/.jenkins/workspace/django_Project@2'
+                """
             }
         }
     }
