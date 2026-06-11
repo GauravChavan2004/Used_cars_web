@@ -17,7 +17,7 @@ pipeline {
             steps {
                 bat """
                 wsl ansible-playbook /home/myansibleprj/django_prj_deploy.yml ^
-                -e workspace_path='/mnt/c/ProgramData/Jenkins/.jenkins/workspace/django_Project@2'
+                -e workspace_path='${WORKSPACE.replace("\\","/").replace("C:","/mnt/c")}'
                 """
             }
         }
