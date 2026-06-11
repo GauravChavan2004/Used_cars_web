@@ -2,7 +2,11 @@ pipeline {
     agent any
 
     stages {
-
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
         stage('Clone Repository') {
             steps {
                 git 'https://github.com/GauravChavan2004/Used_cars_web.git'
